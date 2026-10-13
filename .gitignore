@@ -1,0 +1,78 @@
+# ─── Python ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# ─── Virtual Environments ─────────────────────────────────────
+venv/
+env/
+.venv/
+.env/
+ENV/
+env.bak/
+venv.bak/
+
+# ─── Environment / Secrets ────────────────────────────────────
+# IMPORTANT: Never commit real credentials
+.env
+!.env.example
+
+# ─── Generated Nutrition Plans ────────────────────────────────
+# Plans contain personal user data — exclude from version control
+plans/*.md
+
+# ─── Flask / Web ──────────────────────────────────────────────
+instance/
+.webassets-cache
+flask_session/
+
+# ─── IDE / Editor ─────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ─── OS Files ─────────────────────────────────────────────────
+desktop.ini
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# ─── Logs ─────────────────────────────────────────────────────
+*.log
+logs/
+flask_out.txt
+flask_err.txt
+
+# ─── Testing ──────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# ─── Jupyter ──────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ─── Node (if any frontend tooling added later) ───────────────
+node_modules/
+npm-debug.log*
+
+# ─── Windows BAT output ───────────────────────────────────────
+*.tmp

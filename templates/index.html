@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NutriBot — AI Nutrition Planner | IBM Granite</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <!-- Marked.js for markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ HEADER ══ -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="logo-area">
+      <div class="logo-icon">🥗</div>
+      <div class="logo-text">
+        <span class="logo-title">NutriBot</span>
+        <span class="logo-sub">AI Nutrition Planner · Powered by IBM Granite LLM</span>
+      </div>
+    </div>
+    <div class="header-badges">
+      <span class="badge badge-ibm">IBM watsonx.ai</span>
+      <span class="badge badge-granite">Granite LLM</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════ MAIN ══ -->
+<main class="app-main">
+
+  <!-- ── STEP PROGRESS BAR ───────────────────────────────────────────── -->
+  <div class="steps-bar" id="stepsBar">
+    <div class="step active" id="step-indicator-1">
+      <div class="step-circle">1</div>
+      <span>Personal Info</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" id="step-indicator-2">
+      <div class="step-circle">2</div>
+      <span>Health Details</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" id="step-indicator-3">
+      <div class="step-circle">3</div>
+      <span>Goals & Prefs</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" id="step-indicator-4">
+      <div class="step-circle">4</div>
+      <span>Your Plan</span>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════ FORM CONTAINER ═══════════════════════ -->
+  <div class="form-container" id="formContainer">
+
+    <!-- ── STEP 1: Personal Info ──────────────────────────────────────── -->
+    <section class="form-step active" id="formStep1">
+      <div class="step-header">
+        <div class="step-emoji">👤</div>
+        <div>
+          <h2>Personal Information</h2>
+          <p class="step-desc">Tell us a bit about yourself so we can personalise your plan.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="name">Full Name <span class="req">*</span></label>
+          <input type="text" id="name" placeholder="e.g. Priya Sharma" maxlength="80" autocomplete="name" />
+        </div>
+        <div class="form-group">
+          <label for="age">Age <span class="req">*</span></label>
+          <input type="number" id="age" placeholder="e.g. 28" min="5" max="120" />
+        </div>
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select id="gender">
+            <option value="">— Select —</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Non-binary">Non-binary</option>
+            <option value="Prefer not to say">Prefer not to say</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="city">City <span class="req">*</span></label>
+          <input type="text" id="city" placeholder="e.g. Mumbai" maxlength="80" />
+        </div>
+        <div class="form-group">
+          <label for="country">Country <span class="req">*</span></label>
+          <input type="text" id="country" placeholder="e.g. India" maxlength="80" />
+        </div>
+        <div class="form-group">
+          <label for="diet_preference">Diet Preference <span class="req">*</span></label>
+          <select id="diet_preference">
+            <option value="">— Select —</option>
+            <option value="Vegetarian">🌿 Vegetarian</option>
+            <option value="Vegan">🌱 Vegan</option>
+            <option value="Non-Vegetarian">🍗 Non-Vegetarian</option>
+            <option value="Pescatarian">🐟 Pescatarian</option>
+            <option value="Flexitarian">🥦 Flexitarian</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <div></div>
+        <button class="btn btn-primary" onclick="nextStep(1)">Next: Health Details →</button>
+      </div>
+    </section>
+
+    <!-- ── STEP 2: Health Details ─────────────────────────────────────── -->
+    <section class="form-step" id="formStep2">
+      <div class="step-header">
+        <div class="step-emoji">🩺</div>
+        <div>
+          <h2>Health Details</h2>
+          <p class="step-desc">Share relevant health information for a safer, more accurate plan.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label for="medical_history">Medical Conditions</label>
+          <div class="checkbox-group" id="medicalCheckboxes">
+            <label class="checkbox-item"><input type="checkbox" value="None" id="med_none" onchange="toggleNone(this)" /> None / Healthy</label>
+            <label class="checkbox-item"><input type="checkbox" value="Diabetes" class="med-check" /> Diabetes</label>
+            <label class="checkbox-item"><input type="checkbox" value="High Blood Pressure" class="med-check" /> High Blood Pressure</label>
+            <label class="checkbox-item"><input type="checkbox" value="High Cholesterol" class="med-check" /> High Cholesterol</label>
+            <label class="checkbox-item"><input type="checkbox" value="Thyroid" class="med-check" /> Thyroid</label>
+            <label class="checkbox-item"><input type="checkbox" value="PCOS" class="med-check" /> PCOS</label>
+            <label class="checkbox-item"><input type="checkbox" value="Heart Disease" class="med-check" /> Heart Disease</label>
+            <label class="checkbox-item"><input type="checkbox" value="Obesity" class="med-check" /> Obesity</label>
+            <label class="checkbox-item"><input type="checkbox" value="IBS" class="med-check" /> IBS / Digestive Issues</label>
+            <label class="checkbox-item"><input type="checkbox" value="Acid Reflux" class="med-check" /> Acid Reflux / GERD</label>
+            <label class="checkbox-item"><input type="checkbox" value="Gout" class="med-check" /> Gout / Arthritis</label>
+          </div>
+          <input type="text" id="medical_history_other" placeholder="Other condition (optional)" maxlength="200" class="mt-sm" />
+        </div>
+
+        <div class="form-group">
+          <label for="allergies">Food Allergies / Intolerances</label>
+          <input type="text" id="allergies" placeholder="e.g. Gluten, Nuts, Lactose" maxlength="200" />
+        </div>
+        <div class="form-group">
+          <label for="weight">Current Weight (optional)</label>
+          <input type="text" id="weight" placeholder="e.g. 70 kg" maxlength="30" />
+        </div>
+        <div class="form-group">
+          <label for="height">Height (optional)</label>
+          <input type="text" id="height" placeholder="e.g. 165 cm or 5'5&quot;" maxlength="30" />
+        </div>
+        <div class="form-group">
+          <label for="activity_level">Activity Level</label>
+          <select id="activity_level">
+            <option value="Sedentary">Sedentary (desk job, little exercise)</option>
+            <option value="Lightly Active">Lightly Active (light exercise 1–3 days/week)</option>
+            <option value="Moderate" selected>Moderate (exercise 3–5 days/week)</option>
+            <option value="Very Active">Very Active (hard exercise 6–7 days/week)</option>
+            <option value="Athlete">Athlete / Sports Professional</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep(2)">Next: Goals →</button>
+      </div>
+    </section>
+
+    <!-- ── STEP 3: Goals & Preferences ───────────────────────────────── -->
+    <section class="form-step" id="formStep3">
+      <div class="step-header">
+        <div class="step-emoji">🎯</div>
+        <div>
+          <h2>Goals & Preferences</h2>
+          <p class="step-desc">What would you like to achieve with your nutrition plan?</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label>Health Goals <span class="req">*</span></label>
+          <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" value="Weight Loss" class="goal-check" /> 🏃 Weight Loss</label>
+            <label class="checkbox-item"><input type="checkbox" value="Weight Gain" class="goal-check" /> 💪 Weight Gain / Muscle Build</label>
+            <label class="checkbox-item"><input type="checkbox" value="Maintain Weight" class="goal-check" /> ⚖️ Maintain Weight</label>
+            <label class="checkbox-item"><input type="checkbox" value="Manage Diabetes" class="goal-check" /> 🩸 Manage Diabetes</label>
+            <label class="checkbox-item"><input type="checkbox" value="Manage Blood Pressure" class="goal-check" /> ❤️ Manage Blood Pressure</label>
+            <label class="checkbox-item"><input type="checkbox" value="Improve Energy" class="goal-check" /> ⚡ Improve Energy Levels</label>
+            <label class="checkbox-item"><input type="checkbox" value="Better Digestion" class="goal-check" /> 🌿 Better Digestion</label>
+            <label class="checkbox-item"><input type="checkbox" value="General Wellness" class="goal-check" /> 🌟 General Wellness</label>
+            <label class="checkbox-item"><input type="checkbox" value="Improve Sleep" class="goal-check" /> 😴 Improve Sleep</label>
+            <label class="checkbox-item"><input type="checkbox" value="Boost Immunity" class="goal-check" /> 🛡️ Boost Immunity</label>
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="goals_custom">Any specific goal or concern? (optional)</label>
+          <textarea id="goals_custom" rows="2" placeholder="e.g. I want to reduce my HbA1c levels, or I'd like more energy for morning workouts..." maxlength="300"></textarea>
+        </div>
+      </div>
+
+      <div class="ethics-notice">
+        <div class="ethics-icon">🤝</div>
+        <div>
+          <strong>Ethical AI Commitment</strong>
+          <p>Your data is processed securely and used only to generate your personalised plan. NutriBot follows IBM's AI ethics principles — we never provide harmful advice and always recommend consulting healthcare professionals for medical decisions.</p>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
+        <button class="btn btn-success btn-lg" id="generateBtn" onclick="generatePlan()">
+          <span class="btn-icon">🤖</span> Generate My Plan with IBM Granite
+        </button>
+      </div>
+    </section>
+
+    <!-- ── STEP 4: Plan Output ────────────────────────────────────────── -->
+    <section class="form-step" id="formStep4">
+      <div class="plan-header">
+        <div>
+          <h2 id="planHeading">Your Personalized Nutrition Plan</h2>
+          <p class="step-desc" id="planSubtitle">Generated by IBM Granite LLM · watsonx.ai</p>
+        </div>
+        <div class="plan-actions">
+          <button class="btn btn-secondary btn-sm" onclick="downloadPlan()">⬇ Download .md</button>
+          <button class="btn btn-secondary btn-sm" onclick="resetForm()">🔄 New Plan</button>
+        </div>
+      </div>
+
+      <!-- Warnings / referral notices -->
+      <div id="warningsBox" class="warnings-box" style="display:none;"></div>
+
+      <!-- Plan content -->
+      <div class="plan-output" id="planOutput"></div>
+
+      <!-- Q&A Chat -->
+      <div class="qa-section">
+        <div class="qa-header">
+          <div class="qa-icon">💬</div>
+          <div>
+            <h3>Ask NutriBot</h3>
+            <p>Ask any nutrition question — powered by IBM Granite LLM</p>
+          </div>
+        </div>
+
+        <div class="chat-window" id="chatWindow">
+          <div class="chat-message bot-message">
+            <div class="chat-avatar">🤖</div>
+            <div class="chat-bubble">
+              Hi! I'm NutriBot. You can ask me any nutrition-related questions — about your plan, healthy eating, recipes, or general wellness. How can I help you today?
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input-row">
+          <input type="text" id="userQuestion" class="chat-input"
+            placeholder="Ask a nutrition question..."
+            maxlength="600"
+            onkeypress="if(event.key==='Enter') sendQuery()" />
+          <button class="btn btn-primary" onclick="sendQuery()">Send</button>
+        </div>
+
+        <div class="quick-questions">
+          <span class="qq-label">Quick questions:</span>
+          <button class="qq-btn" onclick="askQuick('What foods should I eat to manage blood sugar?')">Blood sugar foods</button>
+          <button class="qq-btn" onclick="askQuick('How much protein do I need daily?')">Daily protein</button>
+          <button class="qq-btn" onclick="askQuick('What are good high-fibre foods?')">High-fibre foods</button>
+          <button class="qq-btn" onclick="askQuick('How much water should I drink daily?')">Hydration tips</button>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /form-container -->
+
+  <!-- ── LOADING OVERLAY ──────────────────────────────────────────────── -->
+  <div class="loading-overlay" id="loadingOverlay" style="display:none;">
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <div class="loading-title" id="loadingTitle">Generating Your Nutrition Plan</div>
+      <div class="loading-steps" id="loadingSteps">
+        <div class="loading-step active" id="ls1">🔍 Analysing your health profile…</div>
+        <div class="loading-step" id="ls2">🤖 Consulting IBM Granite LLM…</div>
+        <div class="loading-step" id="ls3">🧪 Applying ethical guardrails…</div>
+        <div class="loading-step" id="ls4">📋 Formatting your personalised plan…</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════ FOOTER ══ -->
+<footer class="app-footer">
+  <div class="footer-inner">
+    <div class="footer-disclaimer">
+      ⚕️ <strong>Medical Disclaimer:</strong> This AI-generated nutrition plan is for informational purposes only and does not constitute medical advice. Always consult a qualified healthcare professional before making significant dietary changes.
+    </div>
+    <div class="footer-credits">
+      Nutrition Agentic AI · IBM Granite LLM · watsonx.ai · Built following IBM AI Ethics Principles
+    </div>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
